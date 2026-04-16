@@ -50,12 +50,14 @@ def insert_single_match(d):
     conn.commit()
     conn.close()
 
-def fetch_match_url():
+def match_url_exists(url):
     conn = get_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor()
 
-    cur.execute("select match_url from ipl_data")
-    data = cur.fetchall()
+    query = "SELECT match_url FROM ipl_data WHERE match_url = %s"
+    cur.execute(query, (url,))
 
+    result = cur.fetchone()
     conn.close()
-    return data
+    return result is not None
+
